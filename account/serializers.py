@@ -1,11 +1,10 @@
-from dataclasses import field
 from django.contrib.auth.models import User
 from rest_framework import serializers
 
 class SignUpSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        field = ('first_name', 'last_name', 'email', 'password')
+        fields = ('first_name', 'last_name', 'email', 'password')
 
         extra_kwargs = {
             'first_name': { 'required': True, 'allow_blank': False },
@@ -17,4 +16,4 @@ class SignUpSerializer(serializers.ModelSerializer):
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        field = ('first_name', 'last_name', 'email', 'username')
+        fields = ('first_name', 'last_name', 'email', 'username')
