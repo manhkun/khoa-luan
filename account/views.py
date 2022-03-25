@@ -58,5 +58,18 @@ def updateUser(request):
     
     return Response(serializer.data)
 
-handler500 = 'rest_framework.exceptions.server_error'
+@api_view(['PUT'])
+@permission_classes([IsAuthenticated])
+def uploadResume(request):
+    user = request.user
+    resume = request.FILES['resume']
+
+    if resume == '':
+        return Response({ 'error': 'Please upload your resume.' })
     
+    serializer = UserSerializer(user, many=False)
+    
+    user.userprofile.resume = resume
+    user.userprofile.save()
+    
+    return Response(serializer.data)
