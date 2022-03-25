@@ -4,8 +4,11 @@ from rest_framework.response import Response
 from rest_framework import status
 from django.contrib.auth.hashers import make_password
 from django.contrib.auth.models import User
+
+from account.validators import validate_file_extension
 from .serializers import SignUpSerializer, UserSerializer
 from rest_framework.permissions import IsAuthenticated
+from .validators import validate_file_extension
 
 # Create your views here.
 
@@ -66,6 +69,11 @@ def uploadResume(request):
 
     if resume == '':
         return Response({ 'error': 'Please upload your resume.' })
+    
+    isValidFile = validate_file_extension(resume.name)
+    
+    if not isValidFile:
+        return Response({ 'error': 'Please upload only pdf file.' }, status=status.HTTP_400_BAD_REQUEST)
     
     serializer = UserSerializer(user, many=False)
     
