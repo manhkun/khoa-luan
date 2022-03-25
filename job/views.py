@@ -8,7 +8,7 @@ from rest_framework.pagination import PageNumberPagination
 from django.db.models import Avg, Min, Max, Count
 from django.shortcuts import get_object_or_404
 
-from .serializers import JobSerializer
+from .serializers import CandidatesAppliedSerializer, JobSerializer
 from .models import CandidatesApplied, Job
 from .filters import JobFilter
 
@@ -131,5 +131,15 @@ def applyToJob(request, pk):
     )
     
     return Response({ 'applied': True, 'job_id': jobApplied.id }, status=status.HTTP_200_OK)
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def getCurrentUserAppliedJobs(request):
+    args = { 'user_id': request.user.id }
     
+    jobs = CandidatesApplied.objects.filter(**args)
+    
+    serializer = CandidatesAppliedSerializer(jobs, many=True)
+    
+    return Response(serializer.data)
     
