@@ -118,7 +118,7 @@ def applyToJob(request, pk):
     if user.userprofile.resume == '':
         return Response({ 'error': 'Please upload your resume first' }, status=status.HTTP_400_BAD_REQUEST)
     
-    if job.lastDate < timezone.now():
+    if job.lastDate <= timezone.now():
         return Response({ 'error': 'You cannot apply to this job. Date is over' }, status=status.HTTP_400_BAD_REQUEST)
 
     alreadyApplied = job.candidatesapplied_set.filter(user=user).exists()
